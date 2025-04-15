@@ -24,6 +24,6 @@ public class ClientAddress {
   private String address;
 
   @ManyToOne
-  @JoinColumn(name = "id")
+  @JoinColumn(name = "client_id")
   private Client client;
 }
