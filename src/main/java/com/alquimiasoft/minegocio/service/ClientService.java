@@ -13,7 +13,7 @@ public interface ClientService {
    * @param findString string to find the Client.
    * @return a list with all matches.
    */
-  List<ClientDto> getClientsByFilter(String findString);
+  List<ClientDto> getClientsByFilter(String findString, String findParameter);
 
   /**
    * Create a new Client.

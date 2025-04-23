@@ -22,9 +22,10 @@ class ClientServiceImplTest {
   void getClientsByFilter() {
     // given
     String findString = "12345";
+    String findParameter = "ID";
 
     // when
-    List<ClientDto> clients = clientService.getClientsByFilter(findString);
+    List<ClientDto> clients = clientService.getClientsByFilter(findString, findParameter);
 
     // then
     assertTrue(clients.isEmpty());

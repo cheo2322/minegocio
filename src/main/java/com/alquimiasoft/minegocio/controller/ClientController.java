@@ -19,8 +19,9 @@ public class ClientController {
 
   @GetMapping("/{findString}")
   @ResponseStatus(HttpStatus.OK)
-  public List<ClientDto> getClients(@PathVariable String findString) {
-    return clientService.getClientsByFilter(findString);
+  public List<ClientDto> getClients(
+      @PathVariable String findString, @RequestParam String findParameter) {
+    return clientService.getClientsByFilter(findString, findParameter);
   }
 
   @PostMapping
