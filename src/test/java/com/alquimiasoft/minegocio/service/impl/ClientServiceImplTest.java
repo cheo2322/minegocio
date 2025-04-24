@@ -148,7 +148,40 @@ class ClientServiceImplTest {
   }
 
   @Test
-  void updateClient() {}
+  void shouldReturnClientDto_whenAClientIsUpdated() {
+    // given
+    Client client = TestHelper.buildClient();
+    ClientDto clientDtoUpdate = TestHelper.buildClientDtoToUpdate();
+
+    when(clientRepository.findById(anyLong())).thenReturn(Optional.of(client));
+    when(clientRepository.save(any(Client.class))).thenReturn(client);
+
+    // when
+    ClientDto response = clientService.updateClient(0L, clientDtoUpdate);
+
+    // then
+    assertNotNull(response);
+    assertEquals("Name1", response.name());
+    assertEquals("a@b.c", response.email());
+    assertEquals("+5930", response.phoneNumber());
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentException_whenClientDoesNotExist_inUpdateClient() {
+    // given
+    ClientDto clientDtoUpdate = TestHelper.buildClientDtoToUpdate();
+
+    when(clientRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    // when
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(
+            IllegalArgumentException.class, () -> clientService.updateClient(0L, clientDtoUpdate));
+
+    // then
+    assertNotNull(illegalArgumentException);
+    assertEquals("Client does not exist.", illegalArgumentException.getMessage());
+  }
 
   @Test
   void deleteClient() {}

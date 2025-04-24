@@ -12,6 +12,7 @@ import com.alquimiasoft.minegocio.service.ClientService;
 import com.alquimiasoft.minegocio.service.enums.FindParameter;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -76,7 +77,27 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public ClientDto updateClient(Long id, ClientDto clientDto) {
-    return null;
+    Optional<Client> clientDB = clientRepository.findById(id);
+
+    if (clientDB.isEmpty()) {
+      throw new IllegalArgumentException("Client does not exist.");
+    }
+
+    Client client = clientDB.get();
+
+    if (!StringUtils.isBlank(clientDto.name())) {
+      client.setName(clientDto.name());
+    }
+
+    if (!StringUtils.isBlank(clientDto.email())) {
+      client.setEmail(clientDto.email());
+    }
+
+    if (!StringUtils.isBlank(clientDto.phoneNumber())) {
+      client.setPhoneNumber(clientDto.phoneNumber());
+    }
+
+    return ClientMapper.instanceToDto(clientRepository.save(client));
   }
 
   @Override
