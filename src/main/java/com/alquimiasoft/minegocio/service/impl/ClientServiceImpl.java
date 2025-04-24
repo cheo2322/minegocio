@@ -5,7 +5,9 @@ import com.alquimiasoft.minegocio.entity.ClientAddress;
 import com.alquimiasoft.minegocio.entity.IdentificationType;
 import com.alquimiasoft.minegocio.entity.dto.AddressDto;
 import com.alquimiasoft.minegocio.entity.dto.ClientDto;
+import com.alquimiasoft.minegocio.mapper.AddressMapper;
 import com.alquimiasoft.minegocio.mapper.ClientMapper;
+import com.alquimiasoft.minegocio.repository.ClientAddressRepository;
 import com.alquimiasoft.minegocio.repository.ClientRepository;
 import com.alquimiasoft.minegocio.repository.IdentificationTypeRepository;
 import com.alquimiasoft.minegocio.service.ClientService;
@@ -20,12 +22,15 @@ public class ClientServiceImpl implements ClientService {
 
   private final ClientRepository clientRepository;
   private final IdentificationTypeRepository identificationTypeRepository;
+  private final ClientAddressRepository clientAddressRepository;
 
   public ClientServiceImpl(
       ClientRepository clientRepository,
-      IdentificationTypeRepository identificationTypeRepository) {
+      IdentificationTypeRepository identificationTypeRepository,
+      ClientAddressRepository clientAddressRepository) {
     this.clientRepository = clientRepository;
     this.identificationTypeRepository = identificationTypeRepository;
+    this.clientAddressRepository = clientAddressRepository;
   }
 
   @Override
@@ -116,7 +121,16 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public AddressDto createAddress(Long clientId, AddressDto addressDto) {
-    return null;
+    Optional<Client> clientDB = clientRepository.findById(clientId);
+
+    if (clientDB.isEmpty()) {
+      throw new IllegalArgumentException("Client does not exist.");
+    }
+
+    ClientAddress clientAddress = AddressMapper.dtoToInstance(addressDto);
+    clientAddress.setClient(clientDB.get());
+
+    return AddressMapper.instanceToDto(clientAddressRepository.save(clientAddress));
   }
 
   @Override

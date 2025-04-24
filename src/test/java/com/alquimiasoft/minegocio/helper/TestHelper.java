@@ -3,6 +3,7 @@ package com.alquimiasoft.minegocio.helper;
 import com.alquimiasoft.minegocio.entity.Client;
 import com.alquimiasoft.minegocio.entity.ClientAddress;
 import com.alquimiasoft.minegocio.entity.IdentificationType;
+import com.alquimiasoft.minegocio.entity.dto.AddressDto;
 import com.alquimiasoft.minegocio.entity.dto.ClientDto;
 import java.util.List;
 
@@ -30,19 +31,26 @@ public class TestHelper {
     return new ClientDto(null, null, null, "Name1", "a@b.c", "+5930", null, null, null);
   }
 
+  public static ClientAddress buildClientAddress() {
+    ClientAddress clientAddress = new ClientAddress();
+    clientAddress.setId(2L);
+    clientAddress.setProvince("Province");
+    clientAddress.setCity("City");
+    clientAddress.setAddress("Address");
+    clientAddress.setIsMatrix(false);
+
+    return clientAddress;
+  }
+
+  public static AddressDto buildAddressDto() {
+    return new AddressDto(2L, "Province", "City", "Address", false);
+  }
+
   private static IdentificationType buildIdentificationType() {
     IdentificationType identificationType = new IdentificationType();
     identificationType.setId(1L);
     identificationType.setIdentificationType("CEDULA");
 
     return identificationType;
-  }
-
-  private static ClientAddress buildClientAddress() {
-    ClientAddress clientAddress = new ClientAddress();
-    clientAddress.setId(2L);
-    clientAddress.setAddress("Address");
-
-    return clientAddress;
   }
 }

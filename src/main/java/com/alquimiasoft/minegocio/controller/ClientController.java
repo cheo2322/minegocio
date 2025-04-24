@@ -51,7 +51,7 @@ public class ClientController {
     clientService.deleteClient(id);
   }
 
-  @PostMapping("/{clientId}/mainAddress")
+  @PostMapping("/{clientId}/address")
   @ResponseStatus(HttpStatus.CREATED)
   public AddressDto createAddress(@PathVariable Long clientId, @RequestBody AddressDto addressDto) {
     return clientService.createAddress(clientId, addressDto);

@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.alquimiasoft.minegocio.entity.Client;
+import com.alquimiasoft.minegocio.entity.ClientAddress;
+import com.alquimiasoft.minegocio.entity.dto.AddressDto;
 import com.alquimiasoft.minegocio.entity.dto.ClientDto;
 import com.alquimiasoft.minegocio.helper.TestHelper;
+import com.alquimiasoft.minegocio.repository.ClientAddressRepository;
 import com.alquimiasoft.minegocio.repository.ClientRepository;
 import com.alquimiasoft.minegocio.repository.IdentificationTypeRepository;
 import java.util.List;
@@ -22,6 +25,8 @@ class ClientServiceImplTest {
   @Mock ClientRepository clientRepository;
 
   @Mock IdentificationTypeRepository identificationTypeRepository;
+
+  @Mock ClientAddressRepository clientAddressRepository;
 
   @InjectMocks ClientServiceImpl clientService;
 
@@ -216,7 +221,45 @@ class ClientServiceImplTest {
   }
 
   @Test
-  void createAddress() {}
+  void shouldReturnAddress_whenAddedANewOneToAClient() {
+    // given
+    Client client = TestHelper.buildClient();
+    ClientAddress clientAddress = TestHelper.buildClientAddress();
+    AddressDto addressDto = TestHelper.buildAddressDto();
+
+    when(clientRepository.findById(anyLong())).thenReturn(Optional.of(client));
+    when(clientAddressRepository.save(any(ClientAddress.class))).thenReturn(clientAddress);
+
+    // when
+    AddressDto response = clientService.createAddress(0L, addressDto);
+
+    // then
+    assertNotNull(response);
+    assertEquals(2L, response.id());
+    assertEquals("Province", response.province());
+    assertEquals("City", response.city());
+    assertEquals("Address", response.address());
+    assertFalse(response.isMatrix());
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentException_whenClientIsNotFound_inCreateAddress() {
+    // given
+    AddressDto addressDto = TestHelper.buildAddressDto();
+
+    when(clientRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    // when
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(
+            IllegalArgumentException.class, () -> clientService.createAddress(0L, addressDto));
+
+    // then
+    assertNotNull(illegalArgumentException);
+    assertEquals("Client does not exist.", illegalArgumentException.getMessage());
+
+    verify(clientRepository).findById(0L);
+  }
 
   @Test
   void getAdditionalAddresses() {}
