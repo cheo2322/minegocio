@@ -51,15 +51,15 @@ public class ClientController {
     clientService.deleteClient(id);
   }
 
-  @PostMapping("/{clientId}/address")
+  @PostMapping("/{clientId}/addresses")
   @ResponseStatus(HttpStatus.CREATED)
   public AddressDto createAddress(@PathVariable Long clientId, @RequestBody AddressDto addressDto) {
     return clientService.createAddress(clientId, addressDto);
   }
 
-  @GetMapping("/{clientId}/mainAddress")
+  @GetMapping("/{clientId}/addresses")
   @ResponseStatus(HttpStatus.OK)
   public List<AddressDto> getAdditionalAddresses(@PathVariable Long clientId) {
-    return clientService.getAdditionalAddresses(clientId);
+    return clientService.getAddresses(clientId);
   }
 }

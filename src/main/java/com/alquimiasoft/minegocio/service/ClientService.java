@@ -54,5 +54,5 @@ public interface ClientService {
    * @param clientId to find the Client.
    * @return a list of Address DTO.
    */
-  List<AddressDto> getAdditionalAddresses(Long clientId);
+  List<AddressDto> getAddresses(Long clientId);
 }

@@ -262,5 +262,38 @@ class ClientServiceImplTest {
   }
 
   @Test
-  void getAdditionalAddresses() {}
+  void shouldReturnAddresses() {
+    // given
+    Client client = TestHelper.buildClient();
+
+    when(clientRepository.findById(anyLong())).thenReturn(Optional.of(client));
+
+    // when
+    List<AddressDto> addresses = clientService.getAddresses(0L);
+
+    // then
+    assertNotNull(addresses);
+    assertEquals(1, addresses.size());
+    assertEquals(2L, addresses.get(0).id());
+    assertEquals("Province", addresses.get(0).province());
+    assertEquals("City", addresses.get(0).city());
+    assertEquals("Address", addresses.get(0).address());
+    assertFalse(addresses.get(0).isMatrix());
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentException_whenClientIsNotFound_inGetAddresses() {
+    // given
+    when(clientRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    // when
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(IllegalArgumentException.class, () -> clientService.getAddresses(0L));
+
+    // then
+    assertNotNull(illegalArgumentException);
+    assertEquals("Client does not exist.", illegalArgumentException.getMessage());
+
+    verify(clientRepository).findById(0L);
+  }
 }

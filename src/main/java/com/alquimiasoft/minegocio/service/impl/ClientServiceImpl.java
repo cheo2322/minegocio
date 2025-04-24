@@ -134,7 +134,10 @@ public class ClientServiceImpl implements ClientService {
   }
 
   @Override
-  public List<AddressDto> getAdditionalAddresses(Long clientId) {
-    return List.of();
+  public List<AddressDto> getAddresses(Long clientId) {
+    return clientRepository
+        .findById(clientId)
+        .map(client -> client.getAddresses().stream().map(AddressMapper::instanceToDto).toList())
+        .orElseThrow(() -> new IllegalArgumentException("Client does not exist."));
   }
 }
