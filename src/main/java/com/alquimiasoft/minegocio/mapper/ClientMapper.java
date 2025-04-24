@@ -13,6 +13,8 @@ public class ClientMapper {
         client.getName(),
         client.getEmail(),
         client.getPhoneNumber(),
+        client.getAddresses().get(0).getProvince(),
+        client.getAddresses().get(0).getCity(),
         client.getAddresses().get(0).getAddress());
   }
 

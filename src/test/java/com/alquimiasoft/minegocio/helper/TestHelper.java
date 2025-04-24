@@ -22,11 +22,12 @@ public class TestHelper {
   }
 
   public static ClientDto buildClientDto() {
-    return new ClientDto(0L, "CEDULA", "0000000000", "Name", "x@y.z", "+593", "Address");
+    return new ClientDto(
+        0L, "CEDULA", "0000000000", "Name", "x@y.z", "+593", "Province", "City", "Address");
   }
 
   public static ClientDto buildClientDtoToUpdate() {
-    return new ClientDto(null, null, null, "Name1", "a@b.c", "+5930", null);
+    return new ClientDto(null, null, null, "Name1", "a@b.c", "+5930", null, null, null);
   }
 
   private static IdentificationType buildIdentificationType() {

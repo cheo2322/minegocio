@@ -7,4 +7,6 @@ public record ClientDto(
     String name,
     String email,
     String phoneNumber,
+    String mainProvince,
+    String mainCity,
     String mainAddress) {}

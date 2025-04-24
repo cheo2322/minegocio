@@ -66,6 +66,8 @@ public class ClientServiceImpl implements ClientService {
     client.setIdentificationType(identificationType.get());
 
     ClientAddress clientAddress = new ClientAddress();
+    clientAddress.setProvince(clientDto.mainProvince());
+    clientAddress.setCity(clientDto.mainCity());
     clientAddress.setAddress(clientDto.mainAddress());
     clientAddress.setIsMatrix(true);
     clientAddress.setClient(client);
