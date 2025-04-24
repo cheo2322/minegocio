@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
   List<Client> findByIdentificationNumberContaining(String keyword);
+
+  List<Client> findByNameContaining(String keyword);
 }
