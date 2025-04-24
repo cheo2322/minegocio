@@ -26,8 +26,13 @@ public class ClientServiceImpl implements ClientService {
             .map(ClientMapper::instanceToDto)
             .toList();
       }
-      case NAME -> List.of(); // TODO: Implement the case
+      case NAME -> {
+        return clientRepository.findByNameContaining(findString).stream()
+            .map(ClientMapper::instanceToDto)
+            .toList();
+      }
     }
+
     return List.of();
   }
 
