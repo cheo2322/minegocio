@@ -95,6 +95,7 @@ class ClientServiceImplTest {
     ClientDto clientDto = TestHelper.buildClientDto();
     Client client = TestHelper.buildClient();
 
+    when(clientRepository.findByIdentificationNumber(anyString())).thenReturn(Optional.empty());
     when(identificationTypeRepository.findByIdentificationType(anyString()))
         .thenReturn(Optional.of(client.getIdentificationType()));
     when(clientRepository.save(any(Client.class))).thenReturn(client);
@@ -118,6 +119,7 @@ class ClientServiceImplTest {
     // given
     ClientDto clientDto = TestHelper.buildClientDto();
 
+    when(clientRepository.findByIdentificationNumber(anyString())).thenReturn(Optional.empty());
     when(identificationTypeRepository.findByIdentificationType(anyString()))
         .thenReturn(Optional.empty());
 
@@ -125,7 +127,24 @@ class ClientServiceImplTest {
     IllegalArgumentException illegalArgumentException =
         assertThrows(IllegalArgumentException.class, () -> clientService.createClient(clientDto));
 
+    // then
     assertEquals("ID type not found.", illegalArgumentException.getMessage());
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentException_whenClientAlreadyExist_inCreateClient() {
+    // given
+    ClientDto clientDto = TestHelper.buildClientDto();
+    Client client = TestHelper.buildClient();
+
+    when(clientRepository.findByIdentificationNumber(anyString())).thenReturn(Optional.of(client));
+
+    // when
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(IllegalArgumentException.class, () -> clientService.createClient(clientDto));
+
+    // then
+    assertEquals("Client already exists.", illegalArgumentException.getMessage());
   }
 
   @Test

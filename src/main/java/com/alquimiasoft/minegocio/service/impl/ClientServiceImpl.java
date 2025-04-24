@@ -47,7 +47,13 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public ClientDto createClient(ClientDto clientDto) {
-    // TODO: Validate if Client already exists
+    Optional<Client> clientDB =
+        clientRepository.findByIdentificationNumber(clientDto.identificationNumber());
+
+    if (clientDB.isPresent()) {
+      throw new IllegalArgumentException("Client already exists.");
+    }
+
     Optional<IdentificationType> identificationType =
         identificationTypeRepository.findByIdentificationType(clientDto.identificationType());
 
