@@ -15,13 +15,10 @@ public class ClientAddress {
   private Long id;
 
   @Column(nullable = false)
-  private String province;
-
-  @Column(nullable = false)
-  private String city;
-
-  @Column(nullable = false)
   private String address;
+
+  @Column(nullable = false, name = "is_matrix")
+  private Boolean isMatrix;
 
   @ManyToOne
   @JoinColumn(name = "client_id")

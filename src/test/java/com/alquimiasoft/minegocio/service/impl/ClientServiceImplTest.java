@@ -3,10 +3,13 @@ package com.alquimiasoft.minegocio.service.impl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.alquimiasoft.minegocio.entity.Client;
 import com.alquimiasoft.minegocio.entity.dto.ClientDto;
 import com.alquimiasoft.minegocio.helper.TestHelper;
 import com.alquimiasoft.minegocio.repository.ClientRepository;
+import com.alquimiasoft.minegocio.repository.IdentificationTypeRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ClientServiceImplTest {
 
   @Mock ClientRepository clientRepository;
+
+  @Mock IdentificationTypeRepository identificationTypeRepository;
 
   @InjectMocks ClientServiceImpl clientService;
 
@@ -85,7 +90,43 @@ class ClientServiceImplTest {
   }
 
   @Test
-  void createClient() {}
+  void shouldReturnClientDto_whenCreatesANewClient() {
+    // given
+    ClientDto clientDto = TestHelper.buildClientDto();
+    Client client = TestHelper.buildClient();
+
+    when(identificationTypeRepository.findByIdentificationType(anyString()))
+        .thenReturn(Optional.of(client.getIdentificationType()));
+    when(clientRepository.save(any(Client.class))).thenReturn(client);
+
+    // when
+    ClientDto clientResponse = clientService.createClient(clientDto);
+
+    // then
+    assertNotNull(clientResponse);
+    assertEquals(0L, clientResponse.id());
+    assertEquals("CEDULA", clientResponse.identificationType());
+    assertEquals("0000000000", clientResponse.identificationNumber());
+    assertEquals("Name", clientResponse.name());
+    assertEquals("x@y.z", clientResponse.email());
+    assertEquals("+593", clientResponse.phoneNumber());
+    assertEquals("Address", clientResponse.mainAddress());
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentException_whenIdentificationTypeIsNotFound_inCreateClient() {
+    // given
+    ClientDto clientDto = TestHelper.buildClientDto();
+
+    when(identificationTypeRepository.findByIdentificationType(anyString()))
+        .thenReturn(Optional.empty());
+
+    // when
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(IllegalArgumentException.class, () -> clientService.createClient(clientDto));
+
+    assertEquals("ID type not found.", illegalArgumentException.getMessage());
+  }
 
   @Test
   void updateClient() {}

@@ -1,21 +1,30 @@
 package com.alquimiasoft.minegocio.service.impl;
 
+import com.alquimiasoft.minegocio.entity.Client;
+import com.alquimiasoft.minegocio.entity.ClientAddress;
+import com.alquimiasoft.minegocio.entity.IdentificationType;
 import com.alquimiasoft.minegocio.entity.dto.AddressDto;
 import com.alquimiasoft.minegocio.entity.dto.ClientDto;
 import com.alquimiasoft.minegocio.mapper.ClientMapper;
 import com.alquimiasoft.minegocio.repository.ClientRepository;
+import com.alquimiasoft.minegocio.repository.IdentificationTypeRepository;
 import com.alquimiasoft.minegocio.service.ClientService;
 import com.alquimiasoft.minegocio.service.enums.FindParameter;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClientServiceImpl implements ClientService {
 
   private final ClientRepository clientRepository;
+  private final IdentificationTypeRepository identificationTypeRepository;
 
-  public ClientServiceImpl(ClientRepository clientRepository) {
+  public ClientServiceImpl(
+      ClientRepository clientRepository,
+      IdentificationTypeRepository identificationTypeRepository) {
     this.clientRepository = clientRepository;
+    this.identificationTypeRepository = identificationTypeRepository;
   }
 
   @Override
@@ -38,7 +47,25 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public ClientDto createClient(ClientDto clientDto) {
-    return null;
+    // TODO: Validate if Client already exists
+    Optional<IdentificationType> identificationType =
+        identificationTypeRepository.findByIdentificationType(clientDto.identificationType());
+
+    if (identificationType.isEmpty()) {
+      throw new IllegalArgumentException("ID type not found.");
+    }
+
+    Client client = ClientMapper.dtoToInstance(clientDto);
+    client.setIdentificationType(identificationType.get());
+
+    ClientAddress clientAddress = new ClientAddress();
+    clientAddress.setAddress(clientDto.mainAddress());
+    clientAddress.setIsMatrix(true);
+    clientAddress.setClient(client);
+
+    client.setAddresses(List.of(clientAddress));
+
+    return ClientMapper.instanceToDto(clientRepository.save(client));
   }
 
   @Override
