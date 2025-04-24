@@ -36,9 +36,8 @@ public interface ClientService {
    * Delete a Client by turning it inactive.
    *
    * @param id to find the Client.
-   * @return the deleted Client DTO.
    */
-  ClientDto deleteClient(Long id);
+  void deleteClient(Long id);
 
   /**
    * Add a new address to a Client.

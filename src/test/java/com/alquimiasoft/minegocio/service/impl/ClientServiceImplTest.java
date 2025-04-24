@@ -184,7 +184,36 @@ class ClientServiceImplTest {
   }
 
   @Test
-  void deleteClient() {}
+  void shouldDeleteAClientByID() {
+    // given
+    Client client = TestHelper.buildClient();
+
+    when(clientRepository.findById(anyLong())).thenReturn(Optional.of(client));
+    doNothing().when(clientRepository).deleteById(anyLong());
+
+    // when
+    clientService.deleteClient(0L);
+
+    // then
+    verify(clientRepository).findById(0L);
+    verify(clientRepository).deleteById(0L);
+  }
+
+  @Test
+  void shouldThrowIllegalArgumentException_whenClientIsNotFound_inDeleteClient() {
+    // given
+    when(clientRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    // when
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(IllegalArgumentException.class, () -> clientService.deleteClient(0L));
+
+    // then
+    assertNotNull(illegalArgumentException);
+    assertEquals("Client does not exist.", illegalArgumentException.getMessage());
+
+    verify(clientRepository).findById(0L);
+  }
 
   @Test
   void createAddress() {}

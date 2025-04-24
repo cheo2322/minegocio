@@ -47,8 +47,8 @@ public class ClientController {
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public ClientDto deleteClient(@PathVariable Long id) {
-    return clientService.deleteClient(id);
+  public void deleteClient(@PathVariable Long id) {
+    clientService.deleteClient(id);
   }
 
   @PostMapping("/{clientId}/mainAddress")

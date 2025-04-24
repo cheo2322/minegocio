@@ -101,8 +101,15 @@ public class ClientServiceImpl implements ClientService {
   }
 
   @Override
-  public ClientDto deleteClient(Long id) {
-    return null;
+  public void deleteClient(Long id) {
+    Optional<Client> clientDB = clientRepository.findById(id);
+
+    if (clientDB.isEmpty()) {
+      throw new IllegalArgumentException("Client does not exist.");
+    }
+
+    // Here, we can use a flag to deactivate the Client instead of delete it from DB
+    clientRepository.deleteById(clientDB.get().getId());
   }
 
   @Override
