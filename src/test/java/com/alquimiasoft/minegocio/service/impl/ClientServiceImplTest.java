@@ -67,6 +67,24 @@ class ClientServiceImplTest {
   }
 
   @Test
+  void shouldThrowBadRequest_whenFindParameterIsNotAllowed() {
+    // given
+    String findString = "am";
+    String findParameter = "NAME1";
+
+    // when
+    IllegalArgumentException illegalArgumentException =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> clientService.getClientsByFilter(findString, findParameter));
+
+    // then
+    assertEquals(
+        "No enum constant com.alquimiasoft.minegocio.service.enums.FindParameter.NAME1",
+        illegalArgumentException.getMessage());
+  }
+
+  @Test
   void createClient() {}
 
   @Test
