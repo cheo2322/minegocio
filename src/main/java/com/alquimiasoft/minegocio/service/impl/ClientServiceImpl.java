@@ -5,6 +5,8 @@ import com.alquimiasoft.minegocio.entity.ClientAddress;
 import com.alquimiasoft.minegocio.entity.IdentificationType;
 import com.alquimiasoft.minegocio.entity.dto.AddressDto;
 import com.alquimiasoft.minegocio.entity.dto.ClientDto;
+import com.alquimiasoft.minegocio.handler.exception.DuplicateEntityException;
+import com.alquimiasoft.minegocio.handler.exception.EntityNotFoundException;
 import com.alquimiasoft.minegocio.mapper.AddressMapper;
 import com.alquimiasoft.minegocio.mapper.ClientMapper;
 import com.alquimiasoft.minegocio.repository.ClientAddressRepository;
@@ -57,14 +59,14 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.findByIdentificationNumber(clientDto.identificationNumber());
 
     if (clientDB.isPresent()) {
-      throw new IllegalArgumentException("Client already exists.");
+      throw new DuplicateEntityException("Client already exists.");
     }
 
     Optional<IdentificationType> identificationType =
         identificationTypeRepository.findByIdentificationType(clientDto.identificationType());
 
     if (identificationType.isEmpty()) {
-      throw new IllegalArgumentException("ID type not found.");
+      throw new EntityNotFoundException("ID type not found.");
     }
 
     Client client = ClientMapper.dtoToInstance(clientDto);
@@ -87,7 +89,7 @@ public class ClientServiceImpl implements ClientService {
     Optional<Client> clientDB = clientRepository.findById(id);
 
     if (clientDB.isEmpty()) {
-      throw new IllegalArgumentException("Client does not exist.");
+      throw new EntityNotFoundException("Client does not exist.");
     }
 
     Client client = clientDB.get();
@@ -112,7 +114,7 @@ public class ClientServiceImpl implements ClientService {
     Optional<Client> clientDB = clientRepository.findById(id);
 
     if (clientDB.isEmpty()) {
-      throw new IllegalArgumentException("Client does not exist.");
+      throw new EntityNotFoundException("Client does not exist.");
     }
 
     // Here, we can use a flag to deactivate the Client instead of delete it from DB
@@ -124,7 +126,7 @@ public class ClientServiceImpl implements ClientService {
     Optional<Client> clientDB = clientRepository.findById(clientId);
 
     if (clientDB.isEmpty()) {
-      throw new IllegalArgumentException("Client does not exist.");
+      throw new EntityNotFoundException("Client does not exist.");
     }
 
     ClientAddress clientAddress = AddressMapper.dtoToInstance(addressDto);
@@ -138,6 +140,6 @@ public class ClientServiceImpl implements ClientService {
     return clientRepository
         .findById(clientId)
         .map(client -> client.getAddresses().stream().map(AddressMapper::instanceToDto).toList())
-        .orElseThrow(() -> new IllegalArgumentException("Client does not exist."));
+        .orElseThrow(() -> new EntityNotFoundException("Client does not exist."));
   }
 }
