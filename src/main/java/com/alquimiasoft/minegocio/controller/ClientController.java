@@ -42,13 +42,13 @@ public class ClientController {
     return clientService.deleteClient(id);
   }
 
-  @PostMapping("/{clientId}/addresses")
+  @PostMapping("/{clientId}/mainAddress")
   @ResponseStatus(HttpStatus.CREATED)
   public AddressDto createAddress(@PathVariable Long clientId, @RequestBody AddressDto addressDto) {
     return clientService.createAddress(clientId, addressDto);
   }
 
-  @GetMapping("/{clientId}/addresses")
+  @GetMapping("/{clientId}/mainAddress")
   @ResponseStatus(HttpStatus.OK)
   public List<AddressDto> getAdditionalAddresses(@PathVariable Long clientId) {
     return clientService.getAdditionalAddresses(clientId);

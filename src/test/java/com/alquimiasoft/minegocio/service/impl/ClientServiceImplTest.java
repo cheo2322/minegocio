@@ -9,29 +9,31 @@ import com.alquimiasoft.minegocio.repository.ClientRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class ClientServiceImplTest {
 
   @Mock ClientRepository clientRepository;
 
-  ClientServiceImpl clientService = new ClientServiceImpl(clientRepository);
+  @InjectMocks ClientServiceImpl clientService;
 
   private String findString;
   private String findParameter;
-  private String idNumber;
 
   @BeforeEach
   void setup() {
     findString = "12345";
     findParameter = "ID";
-    idNumber = "00";
   }
 
   @Test
   void shouldReturnClients_whenFindIsDoneByIdentificationNumber() {
     // given
-    when(clientRepository.findByIdentificationNumberContaining(idNumber))
+    when(clientRepository.findByIdentificationNumberContaining(findString))
         .thenReturn(List.of(TestHelper.buildClient()));
 
     // when
@@ -45,7 +47,7 @@ class ClientServiceImplTest {
     assertEquals("Name", clients.get(0).name());
     assertEquals("x@y.z", clients.get(0).email());
     assertEquals("+593", clients.get(0).phoneNumber());
-    assertTrue(clients.get(0).addresses().isEmpty());
+    assertEquals("Address", clients.get(0).mainAddress());
   }
 
   @Test

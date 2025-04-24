@@ -1,7 +1,9 @@
 package com.alquimiasoft.minegocio.helper;
 
 import com.alquimiasoft.minegocio.entity.Client;
+import com.alquimiasoft.minegocio.entity.ClientAddress;
 import com.alquimiasoft.minegocio.entity.IdentificationType;
+import java.util.List;
 
 public class TestHelper {
 
@@ -13,6 +15,7 @@ public class TestHelper {
     client.setName("Name");
     client.setEmail("x@y.z");
     client.setPhoneNumber("+593");
+    client.setAddresses(List.of(buildClientAddress()));
 
     return client;
   }
@@ -23,5 +26,15 @@ public class TestHelper {
     identificationType.setIdentificationType("CEDULA");
 
     return identificationType;
+  }
+
+  private static ClientAddress buildClientAddress() {
+    ClientAddress clientAddress = new ClientAddress();
+    clientAddress.setId(2L);
+    clientAddress.setProvince("Province");
+    clientAddress.setCity("City");
+    clientAddress.setAddress("Address");
+
+    return clientAddress;
   }
 }
